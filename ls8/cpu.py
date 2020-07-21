@@ -2,17 +2,19 @@
 
 import sys
 
+HLT = 1
+
 class CPU:
     """Main CPU class."""
-    self.instructions = {0b10000010 : "LDI",
-                         0b01000111 : "PRN",
-                         0b00000001 : "HLT"}
 
     def __init__(self):
         """Construct a new CPU."""
         self.ram = [0] * 256
         self.register = [0] * 8
         self.pc = 0
+        self.instructions = {0b10000010: "LDI",
+                             0b01000111: "PRN",
+                             0b00000001: "HLT"}
 
 
     def load(self):
@@ -68,10 +70,27 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        ir = self.ram_read(self.pc)
-        operand_a = self.ram_read(self.pc + 1)
-        operand_b = self.ram_read(self.pc + 2)
+        while True:
 
+            ir = self.ram_read(self.pc)
+            operand_a = self.ram_read(self.pc + 1)
+            operand_b = self.ram_read(self.pc + 2)
+
+            if ir == 0b10000010:
+                self.ram_write(operand_b, operand_a)
+                # self.pc += 3
+            elif ir == 0b01000111:
+                print(f"{self.ram_read(operand_a)}")
+                # self.pc += 2
+            elif ir == HLT:
+                break
+
+            instruct = ((ir & 0b11000000) >> 6) + 1
+            self.pc += instruct
+
+            # num_params = int(instruct[2:4])
+            # print(num_params)
+            # self.pc +=
 
 
     def ram_read(self, address):
@@ -79,3 +98,7 @@ class CPU:
 
     def ram_write(self, value, address):
         self.ram[address] = value
+
+ls8 = CPU()
+ls8.load()
+ls8.run()
