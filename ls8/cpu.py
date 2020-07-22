@@ -13,7 +13,7 @@ class CPU:
         self.ram = [0] * 256
         self.reg = [0] * 8
         self.pc = 0
-        self.sp = len(self.ram) - 1
+        self.reg[7] = 0xF4
         self.instructions = {
             0b10000010: self.ldi,
             0b01000111: self.prn,
@@ -104,14 +104,12 @@ class CPU:
         sys.exit()
 
     def push(self, address, *args):
-        self.sp -= 1
-        self.ram[self.sp] = self.ram[address]
-        # self.sp -= 1
+        self.reg[7] -= 1
+        self.ram[self.reg[7]] = self.ram[address]
 
     def pop(self, address, *args):
-        # self.sp += 1
-        self.ram[address] = self.ram[self.sp]
-        self.sp += 1
+        self.ram[address] = self.ram[self.reg[7]]
+        self.reg[7] += 1
 
     def call(self, address, *args):
         pass
