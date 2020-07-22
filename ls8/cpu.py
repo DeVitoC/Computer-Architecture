@@ -4,6 +4,7 @@ import sys
 
 HLT = 1
 
+
 class CPU:
     """Main CPU class."""
 
@@ -12,13 +13,18 @@ class CPU:
         self.ram = [0] * 256
         self.reg = [0] * 8
         self.pc = 0
+        self.sp = len(self.ram) - 1
         self.instructions = {
-            0b10000010 : self.ldi,
-            0b01000111 : self.prn,
-            0b10100010 : self.alu,
-            HLT : self.hlt,
+            0b10000010: self.ldi,
+            0b01000111: self.prn,
+            0b10100010: self.alu,
+            0b10100000: self.alu,
+            HLT: self.hlt,
+            0b01000101: self.push,
+            0b01000110: self.pop,
+            0b01010000: self.call,
+            0b00010001: self.ret,
         }
-
 
     def load(self):
         """Load a program into memory."""
@@ -35,27 +41,14 @@ class CPU:
                 program.append(num)
                 line = reader.readline()
 
-        # For now, we've just hardcoded a program:
-
-        # program = [
-        #     # From print8.ls8
-        #     0b10000010, # LDI R0,8
-        #     0b00000000,
-        #     0b00001000,
-        #     0b01000111, # PRN R0
-        #     0b00000000,
-        #     0b00000001, # HLT
-        # ]
-
         for instruction in program:
             self.ram[address] = instruction
             address += 1
 
-
     def alu(self, reg_a, reg_b, op):
         """ALU operations."""
 
-        if op == "ADD":
+        if op == 0b10100000:
             self.reg[reg_a] += self.reg[reg_b]
         if op == 0b10100010:
             self.ram[reg_a] *= self.ram[reg_b]
@@ -86,7 +79,6 @@ class CPU:
     def run(self):
         """Run the CPU."""
         while True:
-
             ir = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
@@ -95,7 +87,6 @@ class CPU:
 
             instruct = ((ir & 0b11000000) >> 6) + 1
             self.pc += instruct
-
 
     def ram_read(self, address):
         return self.ram[address]
@@ -112,4 +103,21 @@ class CPU:
     def hlt(self, *args):
         sys.exit()
 
+    def push(self, address, *args):
+        self.sp -= 1
+        self.ram[self.sp] = self.ram[address]
+        # self.sp -= 1
 
+    def pop(self, address, *args):
+        # self.sp += 1
+        self.ram[address] = self.ram[self.sp]
+        self.sp += 1
+
+    def call(self, address, *args):
+        pass
+
+    def ret(self, address, *args):
+        pass
+
+    def jmp(self, address, *args):
+        self.pc = address
