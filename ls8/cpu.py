@@ -81,32 +81,32 @@ class CPU:
         if op == 0b10100000: # Addition
             self.reg[reg_a] += self.reg[reg_b]
         elif op == 0b10100010: # Multiplication
-            self.ram[reg_a] *= self.ram[reg_b]
+            self.reg[reg_a] *= self.reg[reg_b]
         elif op == 0b10101000: # AND Binary operation
-            self.ram[reg_a] = self.ram[reg_a] & self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] & self.reg[reg_b]
         elif op == 0b01100110: # Decrement
-            self.ram[reg_a] -= 1
+            self.reg[reg_a] -= 1
         elif op == 0b10100011: # Divide
-            if self.ram[reg_b] == 0:
+            if self.reg[reg_b] == 0:
                 print("Cannot divide by 0")
                 self.hlt()
-            self.ram[reg_a] = self.ram[reg_a] // self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] // self.reg[reg_b]
         elif op == 0b01100101: # Increment
-            self.ram[reg_a] += 1
+            self.reg[reg_a] += 1
         elif op == 0b10100100: # Modulo
-            self.ram[reg_a] % self.ram[reg_b]
+            self.reg[reg_a] % self.reg[reg_b]
         elif op == 0b01101001: # NOT Binary operation
-            self.ram[reg_a] = ~self.ram[reg_a]
+            self.reg[reg_a] = ~self.reg[reg_a]
         elif op == 0b10101010: # OR binary operation
-            self.ram[reg_a] = self.ram[reg_a] | self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] | self.reg[reg_b]
         elif op == 0b10101100: # Binary shift left
-            self.ram[reg_a] = self.ram[reg_a] << self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] << self.reg[reg_b]
         elif op == 0b10101101: # Binary shift Right
-            self.ram[reg_a] = self.ram[reg_a] >> self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] >> self.reg[reg_b]
         elif op == 0b10100001: # Subtract
-            self.ram[reg_a] -= self.ram[reg_b]
+            self.reg[reg_a] -= self.reg[reg_b]
         elif op == 0b10101011: # Binary XOR
-            self.ram[reg_a] = self.ram[reg_a] ^ self.ram[reg_b]
+            self.reg[reg_a] = self.reg[reg_a] ^ self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
