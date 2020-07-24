@@ -161,10 +161,10 @@ class CPU:
 
     def push(self, address, *args):
         self.reg[7] -= 1
-        self.ram[self.reg[7]] = self.ram[address]
+        self.ram[self.reg[7]] = self.reg[address]
 
     def pop(self, address, *args):
-        self.ram[address] = self.ram[self.reg[7]]
+        self.reg[address] = self.ram[self.reg[7]]
         self.reg[7] += 1
 
     def call(self, address, *args):
